@@ -37,9 +37,9 @@ python3 run.py
 <img src='/img/result.png'>
 
 # Machine Learning 
-- this model use `nltk` and `scikit-learn` as the core component
+- this model use `nltk` and `scikit-learn` as the core components
 - using `GridSearchCV` feature can be time-consuming. For a simple test run, use `build_model_simple()`, line 192 in `models/train_classifier.py` 
-- results of training with `GridSearchCV` fine-tuned:
+- results of training with `GridSearchCV` fine-tuning:
 <img src='/models/evaluate_score.png'>
 
 # Going further:
@@ -47,5 +47,5 @@ python3 run.py
 - and `ML Pipeline Preparation.ipynb` for train and testing machine learning model.
 
 # Credits
-- Udacity.come has prepared a framework for thsi project
+- Udacity.come has prepared a framework for this project
 - [RealPython.com](https://realpython.com/flask-by-example-part-3-text-processing-with-requests-beautifulsoup-nltk/) has a nice tutorial on building an Flask App with Nltk
