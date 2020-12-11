@@ -47,5 +47,5 @@ python3 run.py
 - and `ML Pipeline Preparation.ipynb` for train and testing machine learning model.
 
 # Credits
-- Udacity.come has prepared a framework for this project
+- Udacity.com has prepared a framework for this project
 - [RealPython.com](https://realpython.com/flask-by-example-part-3-text-processing-with-requests-beautifulsoup-nltk/) has a nice tutorial on building an Flask App with Nltk
