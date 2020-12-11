@@ -37,7 +37,7 @@ python3 run.py
 <img src='/img/result.png'>
 
 # Machine Learning 
-- this model use `nltk` and `scikit-learn` as the core components
+- this model uses `nltk` and `scikit-learn` libraries as the core components
 - using `GridSearchCV` feature can be time-consuming. For a simple test run, use `build_model_simple()`, line 192 in `models/train_classifier.py` 
 - results of training with `GridSearchCV` fine-tuning:
 <img src='/models/evaluate_score.png'>
