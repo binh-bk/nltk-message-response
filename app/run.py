@@ -2,13 +2,16 @@ import json
 import plotly
 import pandas as pd
 
+import re
+import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+nltk.download('stopwords')
 
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-# from sklearn.externals import joblib
 import joblib
 from sqlalchemy import create_engine
 
@@ -16,7 +19,9 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 
 def tokenize(text):
+    text = re.sub(r'[^a-zA-Z0-9]', ' ', text) 
     tokens = word_tokenize(text)
+    tokens = [w for w in tokens if w not in stopwords.words('english')]
     lemmatizer = WordNetLemmatizer()
 
     clean_tokens = []
@@ -30,8 +35,13 @@ def tokenize(text):
 engine = create_engine('sqlite:///../data/data.sqlite')
 df = pd.read_sql_table('message_response', engine)
 
+# scores on testing data
+with open('../models/evaluate_score.txt') as f:
+    scores = json.loads(f.read())
+ 
+
 # load model
-model = joblib.load("../models/multi_clf.pkl")
+model = joblib.load("../models/knn_clf.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -39,30 +49,49 @@ model = joblib.load("../models/multi_clf.pkl")
 @app.route('/index')
 def index():
     
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
-    
+    # Graph #1
+    # process data of each column labeled as 1 (positive)
+    postive_res = df[df.columns[2:]].mean().sort_values(ascending=False).head(10)
+    labels = list(postive_res.index)
+    labels = [label.replace('_', ' ') for label in labels]
+    values = list(postive_res.values)
+
+    # Graph #2
+    cat_labels = [label.replace('_', ' ') for label in scores.keys()]
+    cat_scores = [score['f1-score'] for score in scores.values()]
+
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
                 Bar(
-                    x=genre_names,
-                    y=genre_counts
+                    x=labels,
+                    y=values,
+                    marker_color='lightsalmon'
                 )
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Top positively labeled for each category',
                 'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
+                    'title': "Portion"
+                },                
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=cat_labels,
+                    y=cat_scores,
+                    marker_color='indianred'
+                )
+            ],
+
+            'layout': {
+                'title': 'f1-score on testing data',
+                'yaxis': {
+                    'title': "Portion"
+                },                
             }
         }
     ]
@@ -83,7 +112,7 @@ def go():
 
     # use model to predict classification for query
     classification_labels = model.predict([query])[0]
-    classification_results = dict(zip(df.columns[4:], classification_labels))
+    classification_results = dict(zip(df.columns[2:], classification_labels))
 
     # This will render the go.html Please see that file. 
     return render_template(

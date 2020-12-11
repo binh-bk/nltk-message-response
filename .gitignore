@@ -1,6 +1,6 @@
 # Customize
 venv*
-*.pkl
+draft_*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
