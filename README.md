@@ -8,8 +8,8 @@ NLTK to classify response form a text message with a visualization on a Flask ap
 - Activate virtual environment
 `source venv/bin/activate`
 - Install requirements 
-`pip install - requirements.txt`
-(You may have to update pip by `pip install pip -U`)
+`pip install -r requirements.txt`
+(You may have to update `pip` by `pip install pip -U`)
 
 # Start Flask App
 - Start the app by: `python3 run.py`
