@@ -16,7 +16,7 @@ NLTK to classify response form a text message with a visualization on a Flask ap
 - This should appear on the terminal:
 ```
 python3 run.py 
-[nltk_data] Downloading package stopwords to /home/uno/nltk_data...
+[nltk_data] Downloading package stopwords to /home/user/nltk_data...
 [nltk_data]   Package stopwords is already up-to-date!
  * Serving Flask app "run" (lazy loading)
  * Environment: production
@@ -25,18 +25,21 @@ python3 run.py
  * Debug mode: on
  * Running on http://0.0.0.0:3001/ (Press CTRL+C to quit)
  * Restarting with stat
-[nltk_data] Downloading package stopwords to /home/uno/nltk_data...
+[nltk_data] Downloading package stopwords to /home/user/nltk_data...
 [nltk_data]   Package stopwords is already up-to-date!
  * Debugger is active!
  * Debugger PIN: 952-012-911
 ```
 - Main page of the Flask app
+<img src='/img/main_page.png'>
 
 - Result after querying a text
+<img src='/img/result.png'>
 
 # Going further:
 - Check out `ETL Pipeline Preparation.ipynb` for data Extract-Transform-loading.
 - and `ML Pipeline Preparation.ipynb` for train and testing machine learning model.
+- 
 
 # Credits
 - Udacity.come has prepared a framework for thsi project
