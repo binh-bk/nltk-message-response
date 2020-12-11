@@ -39,8 +39,8 @@ python3 run.py
 # Machine Learning 
 - this model use `nltk` and `scikit-learn` as the core component
 - using `GridSearchCV` feature can be time-consuming. For a simple test run, use `build_model_simple()`, line 192 in `models/train_classifier.py` 
-- results of training with `GridSearchCV` finetuned:
-<img src='/models/evaluate_score.png'
+- results of training with `GridSearchCV` fine-tuned:
+<img src='/models/evaluate_score.png'>
 
 # Going further:
 - Check out `ETL Pipeline Preparation.ipynb` for data Extract-Transform-loading.
