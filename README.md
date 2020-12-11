@@ -36,10 +36,15 @@ python3 run.py
 - Result after querying a text
 <img src='/img/result.png'>
 
+# Machine Learning 
+- this model use `nltk` and `scikit-learn` as the core component
+- using `GridSearchCV` feature can be time-consuming. For a simple test run, use `build_model_simple()`, line 192 in `models/train_classifier.py` 
+- results of training with `GridSearchCV` finetuned:
+<img src='/models/evaluate_score.png'
+
 # Going further:
 - Check out `ETL Pipeline Preparation.ipynb` for data Extract-Transform-loading.
 - and `ML Pipeline Preparation.ipynb` for train and testing machine learning model.
-- 
 
 # Credits
 - Udacity.come has prepared a framework for thsi project
