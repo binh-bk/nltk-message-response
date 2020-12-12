@@ -36,9 +36,17 @@ python3 run.py
 - Result after querying a text
 <img src='/img/result.png'>
 
+# Data Extract-Transform-Loading (ETL)
+- <em>inside `data` folder</em>, run `process_data.py` to clean, combine data like this:
+```python3 process_data.py disaster_messages.csv disaster_categories.csv DisasterResponse.db```
+- Data is saved to `message_response` table by default. Look for line 66 in the script to customize.
+
 # Machine Learning 
 - this model uses `nltk` and `scikit-learn` libraries as the core components
 - using `GridSearchCV` feature can be time-consuming. For a simple test run, use `build_model_simple()`, line 192 in `models/train_classifier.py` 
+- run the script, <em>inside `models` folder</em>, enter this to the terminal:
+```python3 train_classifier.py ../data/DisasterResponse.db classifier.pkl```
+- for a simple model, training took about 1 minute, and evaluation on test data took about 2 minutes. A summary of evaluation is saved to `evaluation_score.txt` and `test_score.png`
 - results of training with `GridSearchCV` fine-tuning:
 <img src='/models/evaluate_score.png'>
 
