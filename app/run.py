@@ -32,16 +32,16 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/data.sqlite')
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('message_response', engine)
 
 # scores on testing data
-with open('../models/evaluate_score.txt') as f:
+with open('../models/evaluate_score_xgb.txt') as f:
     scores = json.loads(f.read())
  
 
 # load model
-model = joblib.load("../models/knn_clf.pkl")
+model = joblib.load("../models/xgb_clf.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -70,7 +70,6 @@ def index():
                     marker_color='lightsalmon'
                 )
             ],
-
             'layout': {
                 'title': 'Top positively labeled for each category',
                 'yaxis': {

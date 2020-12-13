@@ -61,7 +61,7 @@ def clean_data(df):
 def save_data(df, database_filename):
     '''save clean DataFrame to an SQL database'''
 
-    db_filepath = f'sqlite:///../data{database_filename}'
+    db_filepath = f'sqlite:///{database_filename}'
     engine = create_engine(db_filepath)
     df.to_sql('message_response', engine, index=False, if_exists='replace')
     return None  

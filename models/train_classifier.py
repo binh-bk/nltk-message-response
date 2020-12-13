@@ -17,7 +17,10 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from sklearn.model_selection import GridSearchCV
+
+from sklearn.model_selection import GridSearchCV, KFold
+
+from xgboost import XGBClassifier
 
 from joblib import parallel_backend
 import joblib
@@ -25,7 +28,6 @@ import joblib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import numpy as np
-
 
 
 
@@ -96,31 +98,31 @@ def build_model():
 
 
     # setup pipeline
-    pipeline_knn = Pipeline([
+    pipeline_xgb = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
-        ('clf', MultiOutputClassifier(KNeighborsClassifier()))
+        ('clf', MultiOutputClassifier(XGBClassifier(eval_metric='logloss')))
     ])
 
     # uncomment some of parameter for optional training
     parameters = {
-        # 'vect__stop_words': (None, 'english'),
-        'vect__ngram_range': ((1, 1), (1, 2)),
-        'vect__max_df': (0.25, 0.5, 0.75),
-        'vect__max_features': (500, 1000, 2000),
-        # 'tfidf__use_idf': (True, False),
-        # 'tfidf__smooth_idf': (True, False),
-        # 'tfidf__sublinear_tf': (True, False),
-        'clf__estimator__n_neighbors': [3, 5, 10],
-        # 'clf__estimator__weights': ['uniform', 'distance'],
-        # 'clf__estimator__algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute'],
-        # 'clf__estimator__leaf_size': [10,30,50, 100],
-        # 'clf__estimator__p': [1,2,3]
-    }
+            'vect__ngram_range': ((1, 1), (1, 2)),
+    #         'vect__max_df': (0.5, 0.75, 1.0),
+            'vect__max_features': (None, 100, 1000, 10000),
+            'tfidf__use_idf': (True, False),
+            'clf__estimator__n_estimators': [50, 100, 200],
+    #         'clf__estimator__max_depth': [3, 5, 10]
+        }
 
-    cv = GridSearchCV(pipeline_knn, param_grid=parameters, cv=5, verbose=True)
+    # Define cross validation
+    kfold = KFold(n_splits=10, random_state=42)
+
+   
+    clf_xgb = GridSearchCV(pipeline_xgb, param_grid=parameters, cv=kfold, verbose=1)
+
+    # cv = GridSearchCV(pipeline_knn, param_grid=parameters, cv=5, verbose=True)
     
-    return cv
+    return clf_xgb
 
 
 
@@ -160,9 +162,11 @@ def visualize_report(score_report, img_path='test_score.png'):
     x = np.arange(0, len(df_scores))
     for i, label in enumerate(score_types):
         ax.bar(x+i*width, df_scores[label], width=width, label=label)
-    ax.set_xlim(0.5, len(df_scores))
+    ax.set_xlim(0, len(df_scores))
     ax.xaxis.set_major_locator(MultipleLocator(1))
-    ax.set_xticklabels(df_scores.index, rotation=90)
+    cat_labels = list(df_scores.index)
+    cat_labels.insert(0,'')
+    ax.set_xticklabels(cat_labels, rotation=90)
     ax.set_title('Scores on testing data')
     fig.legend(ncol=3, loc='lower center')
     fig.tight_layout();
@@ -173,7 +177,7 @@ def visualize_report(score_report, img_path='test_score.png'):
 def save_model(model, model_filepath):
     '''save trained model to a pickle file'''
 
-    joblib.dump(model, model_filepath)
+    joblib.dump(model, model_filepath, compress=3)
     return None
 
 
@@ -187,14 +191,14 @@ def main():
         
         print('Building model...')
         # model with GridSearCV
-        model = build_model()
+        # model = build_model()
+
         # model with only Pipeline
-        # model = build_model_simple()
+        model = build_model_simple()
         
         print('Training model...')
         start = time.time()
 
-        # with parallel_backend('threading', n_jobs=-1):
         model.fit(X_train, Y_train)     
 
         last_for = time.time() - start
@@ -203,9 +207,10 @@ def main():
         print('Evaluating model...')
         start = time.time()
         scores = evaluate_model(model, X_test, Y_test, category_names)
+        last_for = time.time() - start
         print(f'Total evaluation time: {last_for:.1f} seconds')
 
-        print('Producing a graph for scores')
+        print('Producing a graph for evaluation scores')
         visualize_report(scores)
 
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
@@ -221,6 +226,7 @@ def main():
 
 
 if __name__ == '__main__':
+    print('-'*40)
     print('If the training takes too long, consider running `simple model` \n'
         'to test out the code.')
 
