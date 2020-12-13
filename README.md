@@ -48,7 +48,7 @@ python3 run.py
 ```python3 train_classifier.py ../data/DisasterResponse.db classifier.pkl```
 - for a simple model, training took about 1 minute, and evaluation on test data took about 2 minutes. A summary of evaluation is saved to `evaluation_score.txt` and `test_score.png`
 - results of training with `GridSearchCV` fine-tuning:
-<img src='/models/evaluate_score.png'>
+<img src='/models/evaluate_score_tuned.png'>
 
 # Going further:
 - Check out `ETL Pipeline Preparation.ipynb` for data Extract-Transform-loading.
